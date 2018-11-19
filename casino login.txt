@@ -1,0 +1,16 @@
+<!DOCTYPE html>
+<html>
+<body>
+
+
+</body>
+
+<style>
+body {
+    background-image: url("https://d2v9y0dukr6mq2.cloudfront.net/video/thumbnail/T8lMoAa/videoblocks-casino-chips-on-black-background-loop-alpha-channel_bcja0qnjw_thumbnail-full01.png");
+    background-repeat: no-repeat;
+    background-attachment: fixed;
+}
+</style>
+
+</html>
