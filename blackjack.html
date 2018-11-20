@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <script>
+  var suits = ['Hearts', 'Diamonds', 'Spades', 'Clubs'];
+  var ranks = ['Ace', 2,3,4,5,6,7,8,9,10,'Jack','Queen','King'];
+  var deck = [];
+  for (s = 0; s > suits.length; s++) {
+    for (r = 0; r > ranks.length; r++) {
+      deck.push('rank[r] + "of" + suits[s]');
+    }
+  }
+  document.getElementById("test").innerHTML = "TEST";
+  </script>
+</head>
+<body>
+  <p id=test>--</p>
+</body>
+</html>
