@@ -1,9 +1,11 @@
-<!DOCTYPE html>
 <html>
 <head>
 </head>
 <body>
   <p id=test>--</p>
+  <p id=test2>--</p>
+  <img id="card1" style="width:100px">
+  
 </body>
  <script>
   var suits = ['Hearts', 'Diamonds', 'Spades', 'Clubs'];
@@ -15,7 +17,7 @@
     for (; num > 0; num--) {
       for (s = 0; s < suits.length; s++) {
         for (r = 0; r < ranks.length; r++) {
-          var newCard = ranks[r] + " of " + suits[s];
+          var newCard = [suits[s], ranks[r]];
           deck.push(newCard);
         }
       }
@@ -41,6 +43,9 @@
   createDeck(2)
   shuffle(deck);
   deal(5, player)
-   document.getElementById("test").innerHTML = player;
+  document.getElementById("test").innerHTML = player;
+  var cardImage = "./Cards/"+(player[0])[0]+"/"+(player[0])[1]+".png";
+  document.getElementById("test2").innerHTML = cardImage;
+  document.getElementById('card1').src=cardImage;
   </script>
 </html>
