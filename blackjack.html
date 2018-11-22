@@ -1,22 +1,17 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <script><!DOCTYPE html>
-<html>
-<head>
 </head>
 <body>
   <p id=test>--</p>
 </body>
-
-<script>
+ <script>
   var suits = ['Hearts', 'Diamonds', 'Spades', 'Clubs'];
   var ranks = ['Ace', 2,3,4,5,6,7,8,9,10,'Jack','Queen','King'];
   var deck = [];
   var player = [];
   var opponent = [];
-
-  function createDeck(num) {
+   function createDeck(num) {
     for (; num > 0; num--) {
       for (s = 0; s < suits.length; s++) {
         for (r = 0; r < ranks.length; r++) {
@@ -26,8 +21,7 @@
       }
     }
   }
-
-  function shuffle(d) {
+   function shuffle(d) {
     var currentIndex = d.length, randomIndex, tempValue;
     while(currentIndex !== 0) {
       randomIndex = Math.floor(Math.random() * currentIndex);
@@ -37,8 +31,7 @@
       d[randomIndex] = tempValue;
     }
   }
-
-  function deal(num, hand) {
+   function deal(num, hand) {
     for(; num !== 0; num--){
       hand.push(deck[0]);
       deck.splice(0,1)
@@ -48,22 +41,6 @@
   createDeck(2)
   shuffle(deck);
   deal(5, player)
-
-  document.getElementById("test").innerHTML = player;
+   document.getElementById("test").innerHTML = player;
   </script>
-</html>
-  var suits = ['Hearts', 'Diamonds', 'Spades', 'Clubs'];
-  var ranks = ['Ace', 2,3,4,5,6,7,8,9,10,'Jack','Queen','King'];
-  var deck = [];
-  for (s = 0; s > suits.length; s++) {
-    for (r = 0; r > ranks.length; r++) {
-      deck.push('(rank[r] + "of" + suits[s])');
-    }
-  }
-  document.getElementById("test").innerHTML = "TEST";
-  </script>
-</head>
-<body>
-  <p id=test>--</p>
-</body>
 </html>
