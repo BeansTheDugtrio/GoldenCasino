@@ -4,6 +4,7 @@
 <body>
   <p id=test>--</p>
   <p id=test2>--</p>
+  <p id=test3>--</p>
   <img id="card1" style="width:100px">
   
 </body>
@@ -13,7 +14,8 @@
   var deck = [];
   var player = [];
   var opponent = [];
-   function createDeck(num) {
+  
+  function createDeck(num) {
     for (; num > 0; num--) {
       for (s = 0; s < suits.length; s++) {
         for (r = 0; r < ranks.length; r++) {
@@ -40,12 +42,83 @@
     }
   }
   
+  function calculate(hand) {
+	var tempHand = [];
+	var aCount = 0;
+	for(q = 0; q < hand.length; q++) {
+		var curCard = (hand[q])[1];
+		if (typeof curCard === "string") {
+			if (curCard === "Ace") {
+			aCount += 1;
+			}
+			else {
+			tempHand.push(10);
+			}
+		} else {
+		tempHand.push(curCard);
+		}
+	}
+	var handpoints = 0;
+	for(q = 0; q < tempHand.length; q++) {
+		handpoints += tempHand[q];
+	}
+	for (q = 0; q < aCount; q++) {
+		if (handpoints > 10) {
+			handpoints += 1;
+		} else {
+			handpoints += 11;
+		}
+	}	
+	return handpoints;
+}
+	
+function isSoft(hand) {
+	var tempHand = [];
+	var aCount = 0;
+	var soft = false;
+	for(q = 0; q < hand.length; q++) {
+		var curCard = (hand[q])[1];
+		if (typeof curCard === "string") {
+			if (curCard === "Ace") {
+			aCount += 1;
+			}
+			else {
+			tempHand.push(10);
+			}
+		} else {
+		tempHand.push(curCard);
+		}
+	}
+	var handpoints = 0;
+	for(q = 0; q < tempHand.length; q++) {
+		handpoints += tempHand[q];
+	}
+	for (q = 0; q < aCount; q++) {
+		if (handpoints > 10) {
+			handpoints += 1;
+		} else {
+			handpoints += 11;
+			soft = true;
+		}
+	}	
+	return soft;
+}
+ 
+ 
   createDeck(2)
   shuffle(deck);
-  deal(5, player)
+  deal(3, player)
+  deal (2, opponent)
+  document.getElementById("test2").innerHTML = calculate(player);
+  document.getElementById("test3").innerHTML = isSoft(player);
+  	
+	
+	
+
+  
   document.getElementById("test").innerHTML = player;
   var cardImage = "./Cards/"+(player[0])[0]+"/"+(player[0])[1]+".png";
-  document.getElementById("test2").innerHTML = cardImage;
+  
   document.getElementById('card1').src=cardImage;
   </script>
 </html>
