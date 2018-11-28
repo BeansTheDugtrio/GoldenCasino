@@ -6,6 +6,9 @@
   <p id=test2>--</p>
   <p id=test3>--</p>
   <img id="card1" style="width:100px">
+  <button type="button" id="hit" onclick="hit()">Hit</button>
+  <button type="button" id="double" onclick="doubleDown()">Double</button>
+  <button type="button" id="stand" onclick="stand()">Stand</button>
   
 </body>
  <script>
@@ -14,6 +17,7 @@
   var deck = [];
   var player = [];
   var opponent = [];
+  var turn = "player";
   
   function createDeck(num) {
     for (; num > 0; num--) {
@@ -103,12 +107,90 @@ function isSoft(hand) {
 	}	
 	return soft;
 }
- 
+
+function toggleView(element) {
+	var x = document.getElementById(element);
+	if (x.style.display === "none") {
+        x.style.display = "block";
+    } else {
+        x.style.display = "none";
+    }
+}
+
+function lockButton(element) {
+	document.getElementById(element).disabled = true;
+}
+
+function enableButton(element) {
+	document.getElementById(element).disabled = false;
+}
+
+function gameStart() {
+	deal(2, player);
+	deal(2, opponent);
+	document.getElementById("test2").innerHTML = calculate(player);
+	if (calcuate(player) == 21) {
+		if (calcuate(opponent) == 21) {
+			document.getElementById("test3").innerHTML = "Both BJ";
+		} else {
+			document.getElementById("test3").innerHTML = "Player BJ";
+		}
+	} else if (calcuate(opponent) == 21) {
+		document.getElementById("test3").innerHTML = "House BJ";
+	}
+	enableButton("hit");
+	enableButton("double");
+	enableButton("stand");
+}
+
+function hit() {
+	lockButton("hit");
+	lockButton("double");
+	lockButton("stand");
+	deal(1, player);
+	document.getElementById("test2").innerHTML = calculate(player);
+	if(calcuate(player) > 21) {
+		bust();
+	} else if (calcuate(player) == 21) {
+		document.getElementById("test3").innerHTML = "21 - Forced Stand";
+	} else {
+		document.getElementById("test3").innerHTML ="Hit"
+		enableButton("hit");
+		enableButton("double");
+		enableButton("stand");
+	}
+	document.getElementById("test3").innerHTML = "Hit"
+}
+
+function doubleDown () {
+	//bet *= 2;
+	deal(1, player);
+	document.getElementById("test2").innerHTML = calculate(player);
+	lockButton("hit");
+	lockButton("double");
+	lockButton("stand");
+	if(calcuate(player) > 21) {
+		bust();
+	} else {
+		document.getElementById("test3").innerHTML = "Doubled - Forced Stand";
+	}
+}
+
+function stand () {
+	lockButton("hit");
+	lockButton("double");
+	lockButton("stand");
+	turn = "dealer";
+	document.getElementById("test3").innerHTML = "Stand";
+}
+
+function bust() {
+	document.getElementById("test3").innerHTML = "You have busted";
+}
  
   createDeck(2)
   shuffle(deck);
-  deal(3, player)
-  deal (2, opponent)
+  gameStart();
   document.getElementById("test2").innerHTML = calculate(player);
   document.getElementById("test3").innerHTML = isSoft(player);
   	
