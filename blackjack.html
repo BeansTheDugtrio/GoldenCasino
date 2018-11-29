@@ -19,17 +19,17 @@
   var opponent = [];
   var turn = "player";
   
-  function createDeck(num) {
-    for (; num > 0; num--) {
-      for (s = 0; s < suits.length; s++) {
-        for (r = 0; r < ranks.length; r++) {
-          var newCard = [suits[s], ranks[r]];
-          deck.push(newCard);
-        }
-      }
+function createDeck(num) {
+	for (; num > 0; num--) {
+		for (s = 0; s < suits.length; s++) {
+			for (r = 0; r < ranks.length; r++) {
+				var newCard = [suits[s], ranks[r]];
+				deck.push(newCard);
+			}
+		}
     }
-  }
-   function shuffle(d) {
+}
+function shuffle(d) {
     var currentIndex = d.length, randomIndex, tempValue;
     while(currentIndex !== 0) {
       randomIndex = Math.floor(Math.random() * currentIndex);
@@ -39,14 +39,13 @@
       d[randomIndex] = tempValue;
     }
   }
-   function deal(num, hand) {
-    for(; num !== 0; num--){
+function deal(num, hand) {
+  for(; num !== 0; num--){
       hand.push(deck[0]);
       deck.splice(0,1)
     }
-  }
-  
-  function calculate(hand) {
+  } 
+function calculate(hand) {
 	var tempHand = [];
 	var aCount = 0;
 	for(q = 0; q < hand.length; q++) {
@@ -74,8 +73,7 @@
 		}
 	}	
 	return handpoints;
-}
-	
+}	
 function isSoft(hand) {
 	var tempHand = [];
 	var aCount = 0;
@@ -107,7 +105,6 @@ function isSoft(hand) {
 	}	
 	return soft;
 }
-
 function toggleView(element) {
 	var x = document.getElementById(element);
 	if (x.style.display === "none") {
@@ -116,15 +113,12 @@ function toggleView(element) {
         x.style.display = "none";
     }
 }
-
 function lockButton(element) {
 	document.getElementById(element).disabled = true;
 }
-
 function enableButton(element) {
 	document.getElementById(element).disabled = false;
 }
-
 function gameStart() {
 	deal(2, player);
 	deal(2, opponent);
@@ -142,40 +136,40 @@ function gameStart() {
 	enableButton("double");
 	enableButton("stand");
 }
-
 function hit() {
 	lockButton("hit");
 	lockButton("double");
 	lockButton("stand");
 	deal(1, player);
-	document.getElementById("test2").innerHTML = calculate(player);
-	if(calcuate(player) > 21) {
+	var pts = Number(calculate(player));
+	document.getElementById("test2").innerHTML = pts;
+	if (pts > 21) {
 		bust();
-	} else if (calcuate(player) == 21) {
+	} else if (pts == 21) {
 		document.getElementById("test3").innerHTML = "21 - Forced Stand";
+		turn = "dealer";
 	} else {
 		document.getElementById("test3").innerHTML ="Hit"
 		enableButton("hit");
 		enableButton("double");
 		enableButton("stand");
 	}
-	document.getElementById("test3").innerHTML = "Hit"
 }
-
 function doubleDown () {
 	//bet *= 2;
 	deal(1, player);
+	var pts = Number(calculate(player));
 	document.getElementById("test2").innerHTML = calculate(player);
 	lockButton("hit");
 	lockButton("double");
 	lockButton("stand");
-	if(calcuate(player) > 21) {
+	if (pts > 21) {
 		bust();
 	} else {
 		document.getElementById("test3").innerHTML = "Doubled - Forced Stand";
+		turn = "dealer";
 	}
 }
-
 function stand () {
 	lockButton("hit");
 	lockButton("double");
@@ -183,21 +177,31 @@ function stand () {
 	turn = "dealer";
 	document.getElementById("test3").innerHTML = "Stand";
 }
-
 function bust() {
 	document.getElementById("test3").innerHTML = "You have busted";
+	turn = "dealer";
 }
- 
-  createDeck(2)
-  shuffle(deck);
-  gameStart();
-  document.getElementById("test2").innerHTML = calculate(player);
-  document.getElementById("test3").innerHTML = isSoft(player);
-  	
-	
-	
+function dealerTurn() {
+	var pts = Number(calcuate(opponent));
+	if (pts > 21) {
+		//Dealer Bust
+		document.getElementById("test3").innerHTML = "Dealer has busted";
+		} else if (pts > 17 && isSoft(opponent) === false) {
+		//Dealer Stand
+		document.getElementById("test3").innerHTML = "Dealer has standed";
+		} else {
+			//Dealer Hit
+			deal(1, opponent);
+			dealerTurn()
+		}
+	}
 
-  
+createDeck(2);
+shuffle(deck);
+deal(2, opponent);
+//dealerTurn();
+document.getElementById("test2").innerHTML = calculate(opponent);
+document.getElementById("test3").innerHTML = isSoft(opponent);
   document.getElementById("test").innerHTML = player;
   var cardImage = "./Cards/"+(player[0])[0]+"/"+(player[0])[1]+".png";
   
