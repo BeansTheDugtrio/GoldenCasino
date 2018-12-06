@@ -182,27 +182,33 @@ function bust() {
 	turn = "dealer";
 }
 function dealerTurn() {
-	var pts = Number(calcuate(opponent));
+	var pts = Number(calculate(opponent));
+	document.getElementById("test2").innerHTML = calculate(opponent);
 	if (pts > 21) {
 		//Dealer Bust
 		document.getElementById("test3").innerHTML = "Dealer has busted";
-		} else if (pts > 17 && isSoft(opponent) === false) {
+	} else if (pts > 17 && isSoft(opponent) === false) {
 		//Dealer Stand
 		document.getElementById("test3").innerHTML = "Dealer has standed";
-		} else {
-			//Dealer Hit
-			deal(1, opponent);
-			dealerTurn()
-		}
+	} else if (pts == 17 && isSoft(opponent) === false) {
+		//Dealer Stand
+		document.getElementById("test3").innerHTML = "Dealer has standed";
+	} else {
+		//Dealer Hit
+		deal(1, opponent);
+		document.getElementById("test3").innerHTML = "Dealer has Hit";
+		setTimeout(dealerTurn, 1000)
 	}
+}
+	
 
 createDeck(2);
 shuffle(deck);
 deal(2, opponent);
-//dealerTurn();
+setTimeout(dealerTurn, 1000)
 document.getElementById("test2").innerHTML = calculate(opponent);
 document.getElementById("test3").innerHTML = isSoft(opponent);
-  document.getElementById("test").innerHTML = player;
+ document.getElementById("test").innerHTML = player;
   var cardImage = "./Cards/"+(player[0])[0]+"/"+(player[0])[1]+".png";
   
   document.getElementById('card1').src=cardImage;
