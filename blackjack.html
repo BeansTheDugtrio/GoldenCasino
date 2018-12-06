@@ -5,8 +5,17 @@
   <p id=test>--</p>
   <p id=test2>--</p>
   <p id=test3>--</p>
-  <img id="card1" style="width:100px">
-  <button type="button" id="hit" onclick="hit()">Hit</button>
+  <img id="card1" style="width:75px">
+  <img id="card2" style="width:75px">
+  <img id="card3" style="width:75px">
+  <img id="card4" style="width:75px">
+  <img id="card5" style="width:75px">
+  <img id="card6" style="width:75px">
+  <img id="card7" style="width:75px">
+  <img id="card8" style="width:75px">
+  <img id="card9" style="width:75px">
+  <img id="card10" style="width:75px">
+   <button type="button" id="hit" onclick="hit()">Hit</button>
   <button type="button" id="double" onclick="doubleDown()">Double</button>
   <button type="button" id="stand" onclick="stand()">Stand</button>
   
@@ -200,7 +209,14 @@ function dealerTurn() {
 		setTimeout(dealerTurn, 1000)
 	}
 }
-	
+
+function showHand (){
+	for (i = 1; i <= player.length; i++) {
+		var spot = "card"+i;
+		var cardImage = "./Cards/"+(player[i-1])[0]+"/"+(player[i-1])[1]+".png";
+		document.getElementById(spot).src=cardImage;
+	}
+}	
 
 createDeck(2);
 shuffle(deck);
@@ -209,8 +225,9 @@ setTimeout(dealerTurn, 1000)
 document.getElementById("test2").innerHTML = calculate(opponent);
 document.getElementById("test3").innerHTML = isSoft(opponent);
  document.getElementById("test").innerHTML = player;
-  var cardImage = "./Cards/"+(player[0])[0]+"/"+(player[0])[1]+".png";
+
   
-  document.getElementById('card1').src=cardImage;
+
+		
   </script>
 </html>
