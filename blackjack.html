@@ -4,6 +4,11 @@
 <body>
   <p id=test>--</p>
   <p id=test2>--</p>
+  <p id=test3>--</p>
+  <button type="button" id="hit" onclick="hit()">Hit</button>
+  <button type="button" id="double" onclick="doubleDown()">Double</button>
+  <button type="button" id="stand" onclick="stand()">Stand</button>
+  <div style="background-color:lightblue">
   <img id="card1" style="width:75px">
   <img id="card2" style="width:75px">
   <img id="card3" style="width:75px">
@@ -14,6 +19,19 @@
   <img id="card8" style="width:75px">
   <img id="card9" style="width:75px">
   <img id="card10" style="width:75px">
+  </div>
+  <div style="background-color:red">
+  <img id="dealer1" style="width:75px">
+  <img id="dealer2" style="width:75px">
+  <img id="dealer3" style="width:75px">
+  <img id="dealer4" style="width:75px">
+  <img id="dealer5" style="width:75px">
+  <img id="dealer6" style="width:75px">
+  <img id="dealer7" style="width:75px">
+  <img id="dealer8" style="width:75px">
+  <img id="dealer9" style="width:75px">
+  <img id="dealer10" style="width:75px">
+  </div>
   
 </body>
  <script>
@@ -22,17 +40,19 @@
   var deck = [];
   var player = [];
   var opponent = [];
-   function createDeck(num) {
-    for (; num > 0; num--) {
-      for (s = 0; s < suits.length; s++) {
-        for (r = 0; r < ranks.length; r++) {
-          var newCard = [suits[s], ranks[r]];
-          deck.push(newCard);
-        }
-      }
+  var turn = "player";
+  
+function createDeck(num) {
+	for (; num > 0; num--) {
+		for (s = 0; s < suits.length; s++) {
+			for (r = 0; r < ranks.length; r++) {
+				var newCard = [suits[s], ranks[r]];
+				deck.push(newCard);
+			}
+		}
     }
-  }
-   function shuffle(d) {
+}
+function shuffle(d) {
     var currentIndex = d.length, randomIndex, tempValue;
     while(currentIndex !== 0) {
       randomIndex = Math.floor(Math.random() * currentIndex);
@@ -42,28 +62,205 @@
       d[randomIndex] = tempValue;
     }
   }
-   function deal(num, hand) {
-    for(; num !== 0; num--){
+function deal(num, hand) {
+  for(; num !== 0; num--){
       hand.push(deck[0]);
       deck.splice(0,1)
+	  showHand();
     }
-  }
-  
-  function showHand (){
+  } 
+function calculate(hand) {
+	var tempHand = [];
+	var aCount = 0;
+	for(q = 0; q < hand.length; q++) {
+		var curCard = (hand[q])[1];
+		if (typeof curCard === "string") {
+			if (curCard === "Ace") {
+			aCount += 1;
+			}
+			else {
+			tempHand.push(10);
+			}
+		} else {
+		tempHand.push(curCard);
+		}
+	}
+	var handpoints = 0;
+	for(q = 0; q < tempHand.length; q++) {
+		handpoints += tempHand[q];
+	}
+	for (q = 0; q < aCount; q++) {
+		if (handpoints > 10) {
+			handpoints += 1;
+		} else {
+			handpoints += 11;
+		}
+	}	
+	return handpoints;
+}	
+function isSoft(hand) {
+	var tempHand = [];
+	var aCount = 0;
+	var soft = false;
+	for(q = 0; q < hand.length; q++) {
+		var curCard = (hand[q])[1];
+		if (typeof curCard === "string") {
+			if (curCard === "Ace") {
+			aCount += 1;
+			}
+			else {
+			tempHand.push(10);
+			}
+		} else {
+		tempHand.push(curCard);
+		}
+	}
+	var handpoints = 0;
+	for(q = 0; q < tempHand.length; q++) {
+		handpoints += tempHand[q];
+	}
+	for (q = 0; q < aCount; q++) {
+		if (handpoints > 10) {
+			handpoints += 1;
+		} else {
+			handpoints += 11;
+			soft = true;
+		}
+	}	
+	return soft;
+}
+function toggleView(element) {
+	var x = document.getElementById(element);
+	if (x.style.display === "none") {
+        x.style.display = "block";
+    } else {
+        x.style.display = "none";
+    }
+}
+function lockButton(element) {
+	document.getElementById(element).disabled = true;
+}
+function enableButton(element) {
+	document.getElementById(element).disabled = false;
+}
+function gameStart() {
+	deal(2, player);
+	deal(2, opponent);
+	dealerHand ();
+	var cardImage = "./Cards/"+"Misc"+"/"+"red_back"+".png";
+	//document.getElementById(dealer1).src=cardImage;
+	document.getElementById("test2").innerHTML = cardImage;
+	document.getElementById("dealer1").src="./Cards/Misc/red_back.png";
+	document.getElementById("test2").innerHTML = calculate(player);
+	if (calcuate(player) == 21) {
+		if (calcuate(opponent) == 21) {
+			document.getElementById("test3").innerHTML = "Both BJ";
+		} else {
+			document.getElementById("test3").innerHTML = "Player BJ";
+		}
+	} else if (calcuate(opponent) == 21) {
+		document.getElementById("test3").innerHTML = "House BJ";
+	} else {
+	enableButton("hit");
+	enableButton("double");
+	enableButton("stand");
+	}
+}
+function hit() {
+	lockButton("hit");
+	lockButton("double");
+	lockButton("stand");
+	deal(1, player);
+	var pts = Number(calculate(player));
+	document.getElementById("test2").innerHTML = pts;
+	if (pts > 21) {
+		bust();
+	} else if (pts == 21) {
+		document.getElementById("test3").innerHTML = "21 - Forced Stand";
+		dealerHand ()
+		setTimeout(dealerTurn, 3000);
+	} else {
+		document.getElementById("test3").innerHTML ="Hit"
+		enableButton("hit");
+		enableButton("double");
+		enableButton("stand");
+	}
+}
+function doubleDown () {
+	//bet *= 2;
+	deal(1, player);
+	var pts = Number(calculate(player));
+	document.getElementById("test2").innerHTML = calculate(player);
+	lockButton("hit");
+	lockButton("double");
+	lockButton("stand");
+	if (pts > 21) {
+		bust();
+	} else {
+		document.getElementById("test3").innerHTML = "Doubled - Forced Stand";
+		dealerHand ()
+		setTimeout(dealerTurn, 3000);
+	}
+}
+function stand () {
+	lockButton("hit");
+	lockButton("double");
+	lockButton("stand");
+	dealerHand ()
+	setTimeout(dealerTurn, 3000);
+	document.getElementById("test3").innerHTML = "Stand";
+}
+function bust() {
+	document.getElementById("test3").innerHTML = "You have busted";
+	dealerHand ()
+	setTimeout(dealerTurn, 3000);
+}
+function dealerTurn() {
+	var pts = Number(calculate(opponent));
+	document.getElementById("test2").innerHTML = calculate(opponent);
+	if (pts > 21) {
+		//Dealer Bust
+		document.getElementById("test3").innerHTML = "Dealer has busted";
+	} else if (pts > 17 && isSoft(opponent) === false) {
+		//Dealer Stand
+		document.getElementById("test3").innerHTML = "Dealer has standed";
+	} else if (pts == 17 && isSoft(opponent) === false) {
+		//Dealer Stand
+		document.getElementById("test3").innerHTML = "Dealer has standed";
+	} else {
+		//Dealer Hit
+		deal(1, opponent);
+		dealerHand ()
+		document.getElementById("test3").innerHTML = "Dealer has Hit";
+		setTimeout(dealerTurn, 2000)
+	}
+}
+
+function showHand (){
 	for (i = 1; i <= player.length; i++) {
 		var spot = "card"+i;
 		var cardImage = "./Cards/"+(player[i-1])[0]+"/"+(player[i-1])[1]+".png";
 		document.getElementById(spot).src=cardImage;
 	}
-}	
+}
+
+function dealerHand (){
+	for (i = 1; i <= opponent.length; i++) {
+		var spot = "dealer"+i;
+		var cardImage = "./Cards/"+(opponent[i-1])[0]+"/"+(opponent[i-1])[1]+".png";
+		document.getElementById("test3").innerHTML = cardImage;
+		document.getElementById(spot).src=cardImage;
+	}
+}
+	
+createDeck(2);
+shuffle(deck);
+gameStart();
+setTimeout(dealerTurn, 1000)
+document.getElementById("test2").innerHTML = calculate(opponent);
+document.getElementById("test3").innerHTML = isSoft(opponent);
+ document.getElementById("test").innerHTML = player;
+  
 		
-  createDeck(2)
-  shuffle(deck);
-  deal(5, player);
-  showHand();
-  document.getElementById("test").innerHTML = player;
-  //var cardImage = "./Cards/"+(player[0])[0]+"/"+(player[0])[1]+".png";
-  //document.getElementById("test2").innerHTML = cardImage;
-  //document.getElementById('card1').src=cardImage;
   </script>
 </html>
